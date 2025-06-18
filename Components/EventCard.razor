@@ -1,0 +1,15 @@
+@namespace EventEaseApp
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">@Event.Name</h5>
+        <h6 class="card-subtitle mb-2 text-muted">@Event.Date.ToShortDateString()</h6>
+        <p class="card-text">@Event.Location</p>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public Event Event { get; set; } = new Event();
+}

@@ -1,0 +1,38 @@
+@namespace EventEaseApp
+
+@using EventEaseApp
+@inject IStateManager StateManager
+@inject NavigationManager NavigationManager
+
+<div class="session-status @(StateManager.IsAuthenticated() ? "authenticated" : "anonymous")">
+    @if (StateManager.IsAuthenticated())
+    {
+        <div class="alert alert-success">
+            <strong>Logged in as:</strong> @StateManager.CurrentSession.UserId
+            <button class="btn btn-sm btn-outline-danger float-end" @onclick="HandleLogout">Logout</button>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary">
+            Not logged in
+        </div>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        StateManager.OnSessionChanged += StateHasChanged;
+    }
+
+    private async Task HandleLogout()
+    {
+        await StateManager.LogoutAsync(); 
+    }
+
+    public void Dispose()
+    {
+        StateManager.OnSessionChanged -= StateHasChanged;
+    }
+}

@@ -1,0 +1,13 @@
+.session-status {
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.session-status .alert {
+    margin-bottom: 0;
+}
+
+.session-status .btn-sm {
+    margin-left: 1rem;
+}

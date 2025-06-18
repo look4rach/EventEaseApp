@@ -1,0 +1,49 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+
+<ErrorBoundary @ref="errorBoundary">
+    <ChildContent>
+        <div class="page">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+
+            <main>
+                <div class="top-row px-4">
+                    <SessionStatus />
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        </div>
+    </ChildContent>
+    <ErrorContent>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">An error has occurred</h4>
+            <p>Sorry, something went wrong while loading this page.</p>
+            <hr>
+            <div class="mb-0">
+                <button class="btn btn-primary me-2" @onclick="ReloadPage">Reload Page</button>
+                <button class="btn btn-outline-secondary" @onclick="NavigateToHome">Go to Home</button>
+            </div>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    private ErrorBoundary? errorBoundary;
+
+    private void ReloadPage()
+    {
+        errorBoundary?.Recover();
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+
+    private void NavigateToHome()
+    {
+        errorBoundary?.Recover();
+        NavigationManager.NavigateTo("/");
+    }
+}

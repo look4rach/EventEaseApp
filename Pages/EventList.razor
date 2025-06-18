@@ -1,0 +1,144 @@
+@page "/events"
+@using EventEaseApp
+@inject IEventService EventService
+@inject IStateManager StateManager
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<PageTitle>Events - EventEase</PageTitle>
+
+<h3>Events</h3>
+
+@if (StateManager.IsAuthenticated())
+{
+    <div class="mb-3">
+        <a href="/addevent" class="btn btn-primary">Add New Event</a>
+    </div>
+}
+else
+{
+    <div class="alert alert-info mb-3" role="alert">
+        <p class="mb-0">Want to create and manage your own events? <a href="/register" class="alert-link">Register now</a> to get started!</p>
+    </div>
+}
+
+@if (events == null)
+{
+    <p>Loading...</p>
+}
+else if (!events.Any())
+{
+    <p>No events found. @(StateManager.IsAuthenticated() ? "Create one!" : "Register to start creating events!")</p>
+}
+else
+{    
+    <div class="list-group mb-3">
+        @foreach (var eventItem in displayedEvents)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="col-5">
+                    <a href="/event/@eventItem.Id" class="text-decoration-none">
+                        @eventItem.Name
+                        @if (eventItem.CreatorId == StateManager.CurrentSession.Email)
+                        {
+                            <span class="badge bg-primary ms-2">Created by you</span>
+                        }
+                    </a>
+                </div>
+                <div class="col-4">
+                    <span class="text-muted">@eventItem.Date.ToString("MMM dd, yyyy")</span>
+                </div>
+                <div class="col-3 text-end">
+                    @if (StateManager.IsAuthenticated() && eventItem.CreatorId == StateManager.CurrentSession.Email)
+                    {
+                        <button class="btn btn-outline-danger btn-sm" @onclick="() => DeleteEvent(eventItem.Id)">Delete</button>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Event list pagination">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => NavigateToPage(currentPage - 1)" disabled="@(currentPage == 1)">Previous</button>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    var pageNumber = i;
+                    <li class="page-item @(pageNumber == currentPage ? "active" : "")">
+                        <button class="page-link" @onclick="() => NavigateToPage(pageNumber)">@pageNumber</button>
+                    </li>
+                }
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <button class="page-link" @onclick="() => NavigateToPage(currentPage + 1)" disabled="@(currentPage == totalPages)">Next</button>
+                </li>
+            </ul>
+        </nav>
+    }
+}
+
+@code {
+    private List<Event> events = new List<Event>();
+    private List<Event> displayedEvents = new List<Event>();
+    private int pageSize = 10;
+    private int currentPage = 1;
+    private int totalPages => (int)Math.Ceiling(events.Count / (double)pageSize);
+
+    protected override async Task OnInitializedAsync()
+    {
+        StateManager.OnSessionChanged += HandleSessionChanged;
+        await RefreshEvents();
+    }
+
+    private async void HandleSessionChanged()
+    {
+        await RefreshEvents();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task RefreshEvents()
+    {
+        events = await EventService.GetEventsAsync();
+        UpdateDisplayedEvents();
+    }
+
+    private void UpdateDisplayedEvents()
+    {
+        displayedEvents = events
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    private void NavigateToPage(int page)
+    {
+        currentPage = page;
+        UpdateDisplayedEvents();
+    }
+
+    private async Task DeleteEvent(int id)
+    {
+        if (!StateManager.IsAuthenticated())
+        {
+            return;
+        }
+
+        try 
+        {
+            await EventService.DeleteEventAsync(id);
+            await RefreshEvents();
+        }
+        catch (InvalidOperationException)
+        {
+            // Handle unauthorized deletion attempt
+        }
+    }
+
+    public void Dispose()
+    {
+        StateManager.OnSessionChanged -= HandleSessionChanged;
+    }
+}

@@ -1,0 +1,17 @@
+@page "/404"
+@inject NavigationManager NavigationManager
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">404 - Page Not Found</h1>
+    <p class="lead">Sorry, the page you're looking for doesn't exist.</p>
+    <div class="mt-4">
+        <button class="btn btn-primary" @onclick="NavigateToHome">Go to Home</button>
+    </div>
+</div>
+
+@code {
+    private void NavigateToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,161 @@
+@page "/register"
+@using EventEaseApp
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject IStateManager StateManager
+
+<PageTitle>Register - EventEase</PageTitle>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="text-center">Register</h3>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @errorMessage
+                        </div>
+                    }
+                    <EditForm Model="@user" OnValidSubmit="HandleRegistration">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="form-group mb-3">
+                            <label for="name">Name</label>
+                            <InputText id="name" class="form-control" @bind-Value="user.Name" />
+                            <ValidationMessage For="@(() => user.Name)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email">Email</label>
+                            <InputText id="email" class="form-control" @bind-Value="user.Email" />
+                            <ValidationMessage For="@(() => user.Email)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="phone">Phone Number (Optional)</label>
+                            <InputText id="phone" class="form-control" @bind-Value="user.PhoneNumber" />
+                            <ValidationMessage For="@(() => user.PhoneNumber)" />
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" disabled="@isProcessing">
+                                @if (isProcessing)
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    <span class="ms-2">Registering...</span>
+                                }
+                                else
+                                {
+                                    <span>Register</span>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private User user = new();
+    private string? errorMessage;
+    private bool isProcessing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Check if user is already logged in
+        if (StateManager.IsAuthenticated())
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task<bool> ValidateUserRegistration()
+    {
+        try
+        {
+            // Check if this username exists
+            var userSessionKey = $"eventease_session_{user.Name}";
+            var existingUserJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", userSessionKey);
+            
+            if (!string.IsNullOrEmpty(existingUserJson))
+            {
+                // User exists, validate email
+                var existingSession = System.Text.Json.JsonSerializer.Deserialize<SessionState>(existingUserJson);
+                if (existingSession?.Email != user.Email)
+                {
+                    errorMessage = "A user with this name already exists with a different email.";
+                    return false;
+                }
+                return true; // Email matches existing user
+            }
+
+            // Check if email is used by another user
+            var keys = await JSRuntime.InvokeAsync<string[]>("Object.keys", "localStorage");
+            foreach (var key in keys)
+            {
+                if (key.StartsWith("eventease_session_"))
+                {
+                    var sessionJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", key);
+                    var session = System.Text.Json.JsonSerializer.Deserialize<SessionState>(sessionJson);
+                    
+                    if (session?.Email == user.Email && session?.UserId != user.Name)
+                    {
+                        errorMessage = "This email is already registered with a different username.";
+                        return false;
+                    }
+                }
+            }
+
+            return true; // New user with unique email
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred during validation. Please try again.";
+            return false;
+        }
+    }
+
+    private async Task HandleRegistration()
+    {
+        try
+        {
+            isProcessing = true;
+            errorMessage = null;
+
+            if (!await ValidateUserRegistration())
+            {
+                return;
+            }
+
+            // TODO: In a real application, you would:
+            // 1. Call an API to create the user account
+            // 2. Handle password hashing on the server
+            // 3. Implement email verification
+            // 4. Handle duplicate email checks
+
+            // For demo purposes, we'll simulate a brief delay
+            await Task.Delay(1000);
+
+            // Initialize session for the new user
+            await StateManager.LoginAsync(user);
+
+            // Redirect to home page or dashboard
+            NavigationManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Registration failed. Please try again.";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+}

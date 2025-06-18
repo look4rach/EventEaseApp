@@ -1,0 +1,74 @@
+
+@page "/addevent"
+
+@using EventEaseApp
+@using Microsoft.AspNetCore.Components.Forms
+@inject IEventService EventService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Add Event - EventEase</PageTitle>
+
+<h3>Add New Event</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        <EditForm Model="@newEvent" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mb-3">
+                <label for="name">Event Name</label>
+                <InputText id="name" @bind-Value="newEvent.Name" class="form-control" />
+                <ValidationMessage For="@(() => newEvent.Name)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="date">Date</label>
+                <InputDate id="date" @bind-Value="newEvent.Date" class="form-control" />
+                <ValidationMessage For="@(() => newEvent.Date)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="location">Location</label>
+                <InputText id="location" @bind-Value="newEvent.Location" class="form-control" />
+                <ValidationMessage For="@(() => newEvent.Location)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="maxAttendees">Maximum Attendees (0 for unlimited)</label>
+                <InputNumber id="maxAttendees" @bind-Value="newEvent.MaxAttendees" class="form-control" min="0" />
+                <small class="form-text text-muted">Leave as 0 for unlimited attendance</small>
+                <ValidationMessage For="@(() => newEvent.MaxAttendees)" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="description">Description (Optional)</label>
+                <InputTextArea id="description" @bind-Value="newEvent.Description" class="form-control" rows="3" />
+                <ValidationMessage For="@(() => newEvent.Description)" />
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Create Event</button>
+                <a href="/events" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </div>
+        </EditForm>
+    </div>
+    <div class="col-md-6">
+        <h4>Preview</h4>
+        <EventCard Event="newEvent" />
+    </div>
+</div>
+
+@code {
+    private Event newEvent = new() 
+    { 
+        Date = DateTime.Now,
+        MaxAttendees = 0  // Default to unlimited
+    };
+
+    private async Task HandleValidSubmit()
+    {
+        await EventService.AddEventAsync(newEvent);
+        NavigationManager.NavigateTo("/events");
+    }
+}
