@@ -69,6 +69,6 @@
     private async Task HandleValidSubmit()
     {
         await EventService.AddEventAsync(newEvent);
-        NavigationManager.NavigateTo("/events");
+        NavigationManager.NavigateTo("events");
     }
 }

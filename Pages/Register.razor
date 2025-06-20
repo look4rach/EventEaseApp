@@ -72,7 +72,7 @@
         // Check if user is already logged in
         if (StateManager.IsAuthenticated())
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("./");
         }
     }
 
@@ -147,7 +147,7 @@
             await StateManager.LoginAsync(user);
 
             // Redirect to home page or dashboard
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("./");
         }
         catch (Exception ex)
         {
