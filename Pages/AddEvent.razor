@@ -1,5 +1,5 @@
 
-@page "/addevent"
+@page "/EventEaseApp/addevent"
 
 @using EventEaseApp
 @using Microsoft.AspNetCore.Components.Forms
@@ -69,6 +69,6 @@
     private async Task HandleValidSubmit()
     {
         await EventService.AddEventAsync(newEvent);
-        NavigationManager.NavigateTo("/events");
+        NavigationManager.NavigateTo("/EventEaseApp/events");
     }
 }
