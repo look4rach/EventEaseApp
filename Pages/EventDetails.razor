@@ -3,7 +3,7 @@
 @inject IEventService EventService
 @inject NavigationManager NavigationManager
 @inject IStateManager StateManager
-
+@implements IDisposable 
 <PageTitle>Event Details - EventEase</PageTitle>
 
 <div class="container mt-4">
@@ -87,7 +87,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <AttendanceTracker 
+                <AttendanceTracker
                     Event="currentEvent"
                     OnEventUpdated="HandleEventUpdated" />
             </div>
@@ -136,5 +136,40 @@
     {
         currentEvent = updatedEvent;
         await EventService.UpdateEventAsync(updatedEvent);
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        StateManager.OnSessionChanged += HandleSessionChanged;
+        await RefreshEventDetails();
+    }
+
+    private async void HandleSessionChanged()
+    {
+        await InvokeAsync(async () =>
+        {
+            await RefreshEventDetails();
+            StateHasChanged();
+        });
+    }
+
+    private async Task RefreshEventDetails()
+    {
+        try
+        {
+            var events = await EventService.GetEventsAsync();
+            currentEvent = events.FirstOrDefault(e => e.Id == Id);
+            if (currentEvent == null)
+            {
+                errorMessage = $"Event with ID {Id} was not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Error loading event details.";
+        }
+    }
+    public void Dispose()
+    {
+        StateManager.OnSessionChanged -= HandleSessionChanged;
     }
 }
