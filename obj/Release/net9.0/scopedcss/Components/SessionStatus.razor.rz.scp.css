@@ -1,0 +1,13 @@
+.session-status[b-g02iji2b24] {
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.session-status .alert[b-g02iji2b24] {
+    margin-bottom: 0;
+}
+
+.session-status .btn-sm[b-g02iji2b24] {
+    margin-left: 1rem;
+}
