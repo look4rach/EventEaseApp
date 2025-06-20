@@ -36,6 +36,10 @@ bld/
 [Ll]ogs/
 [Pp]ublish/
 **/[Pp]ublish/*
+_framework/
+*.Production.html
+*.Production.html.br
+*.Production.html.gz
 
 ## Visual Studio 2019/2022 cache/options directory
 .vs/
