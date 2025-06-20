@@ -1,0 +1,111 @@
+## Blazor WebAssembly specific
+/bin
+/obj
+/publish
+/wwwroot/js/publish
+/wwwroot/service-worker-assets.js
+/wwwroot/appsettings.json
+/wwwroot/service-worker.js
+/wwwroot/_framework
+/wwwroot/css/app.css.map
+*.blazor.boot.json
+
+## Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.suo
+*.cache
+*.dll.refresh
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio 2019/2022 cache/options directory
+.vs/
+*.vspscc
+*.vssscc
+
+## ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Visual Studio temporary files
+*.tmp
+*.tmp_proj
+*~
+*.swp
+*.bak
+*.cache
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Local development settings
+appsettings.Development.json
+*.Development.json
+
+## Temporary files
+*.log
+*.tmp
+*.temp
+
+## OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Node.js (if using any npm packages)
+node_modules/
+package-lock.json
+
+## Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+## IDE specific files
+.idea/
+*.sln.iml
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## Test Results
+TestResults/
+[Tt]est[Rr]esult*/
+
+## Backup files
+*.bak
+*.backup
+*~
+
+## Blazor specific files to keep
+!wwwroot/css/
+!wwwroot/js/
+!wwwroot/lib/
+!wwwroot/index.html
+!wwwroot/favicon.ico
+!wwwroot/icon-192.png
+!wwwroot/icon-512.png
