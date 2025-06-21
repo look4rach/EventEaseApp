@@ -1,9 +1,9 @@
 {
   "mainAssemblyName": "EventEaseApp",
   "resources": {
-    "hash": "sha256-qN5m2PryE8yPqdq9Wvb9lAipuVTUtQCrH3znnX5JDs4=",
+    "hash": "sha256-HBW1gblvctIom+Oo8VH2imENnAHPM4AZASkL6Iajh6k=",
     "fingerprinting": {
-      "EventEaseApp.0lcc4hmzus.wasm": "EventEaseApp.wasm",
+      "EventEaseApp.bmbq24owy5.wasm": "EventEaseApp.wasm",
       "Microsoft.AspNetCore.Components.Forms.sxuye9wrru.wasm": "Microsoft.AspNetCore.Components.Forms.wasm",
       "Microsoft.AspNetCore.Components.7np9912v9d.wasm": "Microsoft.AspNetCore.Components.wasm",
       "Microsoft.AspNetCore.Components.Web.ndttgttgzu.wasm": "Microsoft.AspNetCore.Components.Web.wasm",
@@ -73,7 +73,7 @@
       "System.Runtime.InteropServices.JavaScript.zp9u3yqbi4.wasm": "sha256-t5fC5E2r9YJ+puOWw7YuXXMwvd7LxeR0Zt16THexNM0="
     },
     "assembly": {
-      "EventEaseApp.0lcc4hmzus.wasm": "sha256-tFLAHq01Ri8xraBSjpmrrPZrwjvKelkehJx0TTCpanM=",
+      "EventEaseApp.bmbq24owy5.wasm": "sha256-rfC3IeTChbD90vin9UVnMwP7ryWmzqjto13DPhulI5A=",
       "Microsoft.AspNetCore.Components.Forms.sxuye9wrru.wasm": "sha256-ICPVStvyBHUWeKThNMH8G4t0RL/D+hjNislw0SppkG0=",
       "Microsoft.AspNetCore.Components.7np9912v9d.wasm": "sha256-7ejCEheV8Yqa7Ufyq97klblOpXKyyLQAwVrYDsGLifc=",
       "Microsoft.AspNetCore.Components.Web.ndttgttgzu.wasm": "sha256-BVIYxe8sopTHXRsQSNlgSv8D8zPxaNqbc5SGxL+3AOk=",
